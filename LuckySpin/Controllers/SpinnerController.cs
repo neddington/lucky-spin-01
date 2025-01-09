@@ -8,14 +8,39 @@ namespace LuckySpin.Controllers
 {
     public class SpinnerController : Controller
     {
+        private int luck;
 
-        public IActionResult Index(int luck) 
+        public IActionResult Index(int luck)
         {
-            //TODO: add your string builder and HTML
+            // Set the private variable
+            this.luck = luck;
 
+            // Build HTML content
+            System.Text.StringBuilder htmlToShow = new System.Text.StringBuilder($"<body><h1>Lucky {this.luck}</h1>");
+            htmlToShow.Append("<button onclick='window.location.reload()'>Spin</button>");
 
-            //TODO: Modify this to use the string builder's response string as the Content property's value
-            return new ContentResult { Content = "<h1>We're Ready to Spin with Controllers</h1>", ContentType="text/html"};
+            // Generate spin results
+            Random random = new Random();
+            int[] spin = new int[3];
+            for (int i = 0; i < spin.Length; i++)
+            {
+                spin[i] = random.Next(1, 10); // Random number between 1-9
+                htmlToShow.Append($"<div>{spin[i]}</div>");
+            }
+
+            // Check if luck matches any spin result
+            if (spin.Contains(this.luck))
+            {
+                htmlToShow.Append("<img src='http://studentfolders.cascadia.edu/itweb285/LuckySpinCoins.jpg'/>");
+            }
+            htmlToShow.Append("</body>");
+
+            // Return the generated content
+            return new ContentResult
+            {
+                Content = htmlToShow.ToString(),
+                ContentType = "text/html"
+            };
         }
     }
 }
